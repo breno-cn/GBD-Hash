@@ -8,7 +8,7 @@
 using namespace std;
 
 // utilize um tamanho de histograma adequado para a quantidade de buckets para os conjuntos de dados fornecidos
-#define TAM_HISTOGRAMA 100
+#define TAM_HISTOGRAMA 200
 
     // static unsigned long
     // sdbm(str)
@@ -28,10 +28,10 @@ int getHash(char *str) {
     int c;
 
     while (c = *str++) {
-        hash = c + (hash << 6) + (hash << 16) - hash;
+        hash = (c + (hash << 6) + (hash << 16) - hash) % TAM_HISTOGRAMA;
     }
 
-    return hash % TAM_HISTOGRAMA;
+    return hash;
 }
 
 // primeira tentativa
@@ -51,7 +51,7 @@ int getHash(char *str) {
 // }
 
 int main() {
-    FILE *f = fopen("cidadesbr.txt","rb");
+    FILE *f = fopen("dblp-1m.txt","rb");
     if (f == NULL) {
         printf("Sinto muito, nao consegui abrir arquivo de dados.");
         return 0;
