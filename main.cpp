@@ -2,16 +2,53 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <math.h>
 
 using namespace std;
 
 // utilize um tamanho de histograma adequado para a quantidade de buckets para os conjuntos de dados fornecidos
 #define TAM_HISTOGRAMA 100
 
+    // static unsigned long
+    // sdbm(str)
+    // unsigned char *str;
+    // {
+    //     unsigned long hash = 0;
+    //     int c;
+
+    //     while (c = *str++)
+    //         hash = c + (hash << 6) + (hash << 16) - hash;
+
+    //     return hash;
+    // }
+
 int getHash(char *str) {
-    // implementar funcao hash para distribuir strings com uniformidade e aleatoriedade
-    return rand() % TAM_HISTOGRAMA;
+    unsigned int hash = 0;
+    int c;
+
+    while (c = *str++) {
+        hash = c + (hash << 6) + (hash << 16) - hash;
+    }
+
+    return hash % TAM_HISTOGRAMA;
 }
+
+// primeira tentativa
+// int getHash(char *str) {
+//     // implementar funcao hash para distribuir strings com uniformidade e aleatoriedade
+//     // return rand() % TAM_HISTOGRAMA;
+//     int p = 11;
+//     int m = TAM_HISTOGRAMA;
+//     int length = strlen(str);
+//     int soma = 0;
+
+//     for (int i = 0; i < length; i++) {
+//         soma += str[i] * pow(p, i);
+//     }
+
+//     return soma % TAM_HISTOGRAMA;
+// }
 
 int main() {
     FILE *f = fopen("cidadesbr.txt","rb");
