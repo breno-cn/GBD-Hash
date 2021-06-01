@@ -10,11 +10,14 @@ using namespace std;
 // utilize um tamanho de histograma adequado para a quantidade de buckets para os conjuntos de dados fornecidos
 #define TAM_HISTOGRAMA 200
 
+
 int getHash(char *str) {
     unsigned int hash = 0;
     int c;
+    int length = strlen(str);
 
-    while (c = *str++) {
+    for (int i = 0; i < length; i++) {
+        c = str[i];
         hash = (c + (hash << 6) + (hash << 16) - hash) % TAM_HISTOGRAMA;
     }
 
