@@ -4,26 +4,42 @@
 #include <time.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 using namespace std;
 
 // utilize um tamanho de histograma adequado para a quantidade de buckets para os conjuntos de dados fornecidos
-#define TAM_HISTOGRAMA 200
+#define TAM_HISTOGRAMA 10000
+#define TAM_BUCKET 200
+#define SEED_FIXA 7
 
+// vetor que armazenara histograma de contagem
+int histograma[TAM_HISTOGRAMA];
 
 int getHash(char *str) {
     unsigned int hash = 0;
     int c;
     int length = strlen(str);
+    srand(SEED_FIXA);
 
     for (int i = 0; i < length; i++) {
         c = str[i];
-        hash = (c + (hash << 6) + (hash << 16) - hash) % TAM_HISTOGRAMA;
+        hash = (c + (hash << 7) + (hash << 13) - hash) % TAM_HISTOGRAMA;
     }
 
-    return hash;
-}
+    if (histograma[hash] >= TAM_BUCKET) {
+        while (true) {
+            int incremento = rand() % TAM_HISTOGRAMA; 
+            
+            if (histograma[(hash + incremento) % TAM_HISTOGRAMA] < TAM_BUCKET) {
+                hash += incremento;
+                break;
+            } 
+        }
+    }
 
+    return hash % TAM_HISTOGRAMA;
+}
 
 int main() {
     FILE *f = fopen("dblp-1m.txt","rb");
@@ -32,11 +48,9 @@ int main() {
         return 0;
     }
 
-    srand (time(NULL));
     char linha[1024];
 
-    // vetor que armazenara histograma de contagem
-    int histograma[TAM_HISTOGRAMA];
+
     for (int i = 0; i < TAM_HISTOGRAMA; i++)
         histograma[i] = 0;
 
